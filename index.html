@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA // Smart Alarm & Time Suite</title>
+    <meta name="description" content="A modern, high-precision Alarm, World Clock, Stopwatch and Timer web application with synthesized tones.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-mesh"></div>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="app-container">
+        <!-- Top Navigation / Header -->
+        <header class="app-header">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="13" r="8"></circle>
+                        <path d="M12 9v4l2 2"></path>
+                        <path d="M5 3 2 6"></path>
+                        <path d="m22 6-3-3"></path>
+                        <path d="M6.38 18.7 4 21"></path>
+                        <path d="M17.64 18.67 20 21"></path>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>AURA <span>ALARM</span></h1>
+                    <span class="logo-tag">PRECISION TIME SUITE</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div id="next-alarm-banner" class="next-alarm-pill">
+                    <span class="pulse-dot"></span>
+                    <span id="next-alarm-text">No active alarms</span>
+                </div>
+                <button id="audio-enable-btn" class="btn-ghost icon-only" title="Enable Web Audio / Sound Status">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Live Clock Hero Section -->
+        <section class="clock-hero">
+            <!-- Analog Dial -->
+            <div class="analog-clock-container">
+                <div class="analog-clock" id="analog-clock">
+                    <div class="clock-face">
+                        <!-- Hour markings generated dynamically or statically -->
+                        <div class="dial-mark mark-12"></div>
+                        <div class="dial-mark mark-3"></div>
+                        <div class="dial-mark mark-6"></div>
+                        <div class="dial-mark mark-9"></div>
+                        <div class="hand hour-hand" id="analog-hour"></div>
+                        <div class="hand minute-hand" id="analog-minute"></div>
+                        <div class="hand second-hand" id="analog-second"></div>
+                        <div class="clock-center-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Time Display -->
+            <div class="digital-hero">
+                <div class="greeting-bar">
+                    <span id="live-greeting">Good Evening</span>
+                    <span class="live-badge"><span class="live-dot"></span> LIVE</span>
+                </div>
+                <div class="time-readout-wrap">
+                    <div class="digital-time" id="hero-digital-time">
+                        <span id="hero-hours">12</span><span class="time-colon">:</span><span id="hero-minutes">00</span><span class="time-colon">:</span><span id="hero-seconds">00</span>
+                    </div>
+                    <div class="digital-ampm" id="hero-ampm">PM</div>
+                </div>
+                <div class="date-timezone-bar">
+                    <div class="date-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span id="hero-date">Friday, August 14, 2026</span>
+                    </div>
+                    <div class="tz-badge" id="hero-timezone">
+                        UTC+05:30 (IST)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="app-tabs" role="tablist">
+            <button class="tab-btn active" data-tab="alarms" id="tab-alarms" role="tab" aria-selected="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="13" r="8"></circle>
+                    <path d="M12 9v4l2 2"></path>
+                    <path d="M5 3 2 6"></path>
+                    <path d="m22 6-3-3"></path>
+                </svg>
+                <span>Alarms</span>
+                <span class="tab-badge" id="alarm-count-badge">0</span>
+            </button>
+            <button class="tab-btn" data-tab="world" id="tab-world" role="tab" aria-selected="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span>World Clock</span>
+            </button>
+            <button class="tab-btn" data-tab="stopwatch" id="tab-stopwatch" role="tab" aria-selected="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="14" r="8"></circle>
+                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                    <line x1="12" y1="10" x2="12" y2="14"></line>
+                </svg>
+                <span>Stopwatch</span>
+            </button>
+            <button class="tab-btn" data-tab="timer" id="tab-timer" role="tab" aria-selected="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 2h4"></path>
+                    <path d="M12 14v-4"></path>
+                    <path d="M4 13a8 8 0 0 1 8-7 8 8 0 1 1-5.3 14L4 17.6"></path>
+                    <path d="m9 17 5 5"></path>
+                </svg>
+                <span>Timer</span>
+            </button>
+        </nav>
+
+        <!-- Main Tab Content Area -->
+        <main class="tab-content-container">
+            <!-- TAB 1: ALARMS -->
+            <section class="tab-pane active" id="pane-alarms">
+                <div class="section-toolbar">
+                    <div class="toolbar-title">
+                        <h2>Configured Alarms</h2>
+                        <p>Manage your custom schedules & wake-up sounds</p>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn-secondary" id="quick-test-btn" title="Trigger a 5-second test alarm">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            <span>Quick 5s Test</span>
+                        </button>
+                        <button class="btn-primary" id="open-add-alarm-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>+ Set New Alarm</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alarm Cards Grid -->
+                <div class="alarms-grid" id="alarms-list">
+                    <!-- Populated by JavaScript -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state hidden" id="alarms-empty-state">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 6v6l4 2"></path>
+                            <circle cx="12" cy="12" r="9"></circle>
+                        </svg>
+                    </div>
+                    <h3>No Alarms Scheduled</h3>
+                    <p>Click "Set New Alarm" above to establish your morning routine or reminder!</p>
+                    <button class="btn-primary" id="empty-add-alarm-btn">+ Add Your First Alarm</button>
+                </div>
+            </section>
+
+            <!-- TAB 2: WORLD CLOCK -->
+            <section class="tab-pane" id="pane-world">
+                <div class="section-toolbar">
+                    <div class="toolbar-title">
+                        <h2>Global Timezones</h2>
+                        <p>Track world market hours and international team times</p>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn-primary" id="add-city-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Add City</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="world-clock-grid" id="world-clock-list">
+                    <!-- Cities injected via JS -->
+                </div>
+            </section>
+
+            <!-- TAB 3: STOPWATCH -->
+            <section class="tab-pane" id="pane-stopwatch">
+                <div class="stopwatch-card">
+                    <div class="stopwatch-display">
+                        <div class="stopwatch-digits" id="sw-display">
+                            <span id="sw-min">00</span><span class="colon">:</span><span id="sw-sec">00</span><span class="dot">.</span><span id="sw-ms" class="ms">00</span>
+                        </div>
+                    </div>
+                    <div class="stopwatch-controls">
+                        <button class="btn-stopwatch start" id="sw-toggle-btn">
+                            <svg id="sw-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            <span id="sw-toggle-text">Start</span>
+                        </button>
+                        <button class="btn-stopwatch lap" id="sw-lap-btn" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                            <span>Lap</span>
+                        </button>
+                        <button class="btn-stopwatch reset" id="sw-reset-btn" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                    <div class="laps-container" id="laps-container">
+                        <div class="laps-header">
+                            <span>Lap #</span>
+                            <span>Split</span>
+                            <span>Total Time</span>
+                        </div>
+                        <div class="laps-list" id="laps-list">
+                            <!-- Laps appended here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: TIMER -->
+            <section class="tab-pane" id="pane-timer">
+                <div class="timer-card">
+                    <!-- Progress Ring -->
+                    <div class="timer-circle-wrap">
+                        <svg class="timer-svg" viewBox="0 0 260 260">
+                            <circle class="timer-bg-circle" cx="130" cy="130" r="115"></circle>
+                            <circle class="timer-progress-circle" id="timer-progress-ring" cx="130" cy="130" r="115"></circle>
+                        </svg>
+                        <div class="timer-center-content">
+                            <div class="timer-digits" id="timer-digits-display">05:00</div>
+                            <div class="timer-status-text" id="timer-status-text">Ready</div>
+                        </div>
+                    </div>
+
+                    <!-- Preset Chips -->
+                    <div class="timer-presets">
+                        <button class="preset-chip" data-seconds="60">1 Min</button>
+                        <button class="preset-chip active" data-seconds="300">5 Min</button>
+                        <button class="preset-chip" data-seconds="600">10 Min</button>
+                        <button class="preset-chip" data-seconds="1500">25 Min (Pomodoro)</button>
+                        <button class="preset-chip" data-seconds="3600">60 Min</button>
+                    </div>
+
+                    <!-- Custom Input Form (When paused/stopped) -->
+                    <div class="timer-custom-inputs" id="timer-inputs-panel">
+                        <div class="time-input-col">
+                            <input type="number" id="timer-input-h" min="0" max="99" value="0" placeholder="00">
+                            <label>Hours</label>
+                        </div>
+                        <span class="colon">:</span>
+                        <div class="time-input-col">
+                            <input type="number" id="timer-input-m" min="0" max="59" value="5" placeholder="05">
+                            <label>Minutes</label>
+                        </div>
+                        <span class="colon">:</span>
+                        <div class="time-input-col">
+                            <input type="number" id="timer-input-s" min="0" max="59" value="0" placeholder="00">
+                            <label>Seconds</label>
+                        </div>
+                    </div>
+
+                    <!-- Timer Controls -->
+                    <div class="timer-controls">
+                        <button class="btn-timer start" id="timer-toggle-btn">
+                            <svg id="timer-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            <span id="timer-toggle-text">Start Timer</span>
+                        </button>
+                        <button class="btn-timer reset" id="timer-reset-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>CHRONOS Audio-Engine &bull; Web Audio Synthesizer &bull; Precise Local Time</p>
+        </footer>
+    </div>
+
+    <!-- MODAL: ADD / EDIT ALARM -->
+    <div class="modal-backdrop hidden" id="alarm-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title">Set New Alarm</h3>
+                <button class="btn-close" id="close-alarm-modal-btn">&times;</button>
+            </div>
+            <form id="alarm-form" class="modal-body">
+                <!-- Time Selector -->
+                <div class="form-group time-picker-group">
+                    <label>Alarm Time</label>
+                    <div class="time-wheel-inputs">
+                        <input type="number" id="alarm-hours" class="time-num-input" min="1" max="12" value="07" required>
+                        <span class="wheel-colon">:</span>
+                        <input type="number" id="alarm-minutes" class="time-num-input" min="0" max="59" value="00" required>
+                        <div class="ampm-toggle">
+                            <button type="button" class="ampm-btn active" id="ampm-am" data-val="AM">AM</button>
+                            <button type="button" class="ampm-btn" id="ampm-pm" data-val="PM">PM</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Label -->
+                <div class="form-group">
+                    <label for="alarm-label">Label / Name</label>
+                    <input type="text" id="alarm-label" class="text-input" placeholder="e.g. Morning Workout, Daily Standup" maxlength="30">
+                </div>
+
+                <!-- Repeat Days -->
+                <div class="form-group">
+                    <label>Repeat Days</label>
+                    <div class="repeat-presets">
+                        <button type="button" class="day-preset-btn" data-preset="everyday">Everyday</button>
+                        <button type="button" class="day-preset-btn active" data-preset="weekdays">Weekdays</button>
+                        <button type="button" class="day-preset-btn" data-preset="weekends">Weekends</button>
+                        <button type="button" class="day-preset-btn" data-preset="once">Once Only</button>
+                    </div>
+                    <div class="days-selector" id="days-selector">
+                        <label class="day-chip active" data-day="1"><input type="checkbox" checked value="1">Mon</label>
+                        <label class="day-chip active" data-day="2"><input type="checkbox" checked value="2">Tue</label>
+                        <label class="day-chip active" data-day="3"><input type="checkbox" checked value="3">Wed</label>
+                        <label class="day-chip active" data-day="4"><input type="checkbox" checked value="4">Thu</label>
+                        <label class="day-chip active" data-day="5"><input type="checkbox" checked value="5">Fri</label>
+                        <label class="day-chip" data-day="6"><input type="checkbox" value="6">Sat</label>
+                        <label class="day-chip" data-day="0"><input type="checkbox" value="0">Sun</label>
+                    </div>
+                </div>
+
+                <!-- Sound Selection -->
+                <div class="form-group">
+                    <label for="alarm-sound">Alarm Tone (Web Audio Synth)</label>
+                    <div class="sound-select-row">
+                        <select id="alarm-sound" class="custom-select">
+                            <option value="digital">Digital Clock Beep (Classic)</option>
+                            <option value="chime" selected>Melodic Marimba Chime (Gentle)</option>
+                            <option value="cyber">Cyber Pulse Arpeggio (Sci-Fi)</option>
+                            <option value="bell">Radiant Brass Bell (Acoustic)</option>
+                            <option value="siren">Urgent Emergency Siren (Wake Fast)</option>
+                        </select>
+                        <button type="button" class="btn-secondary sound-preview-btn" id="preview-sound-btn" title="Preview Sound">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            <span>Preview</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Volume & Snooze Duration -->
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="alarm-volume">Volume (<span id="vol-label">80%</span>)</label>
+                        <input type="range" id="alarm-volume" min="10" max="100" value="80" class="range-slider">
+                    </div>
+                    <div class="form-group half">
+                        <label for="snooze-duration">Default Snooze</label>
+                        <select id="snooze-duration" class="custom-select">
+                            <option value="5">5 Minutes</option>
+                            <option value="10" selected>10 Minutes</option>
+                            <option value="15">15 Minutes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="modal-actions">
+                    <button type="button" class="btn-ghost" id="cancel-alarm-btn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="save-alarm-btn">Save Alarm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD WORLD CLOCK CITY -->
+    <div class="modal-backdrop hidden" id="city-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Add World Clock Location</h3>
+                <button class="btn-close" id="close-city-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="city-select">Select Global City</label>
+                    <select id="city-select" class="custom-select">
+                        <option value="America/New_York|New York|USA">New York (USA - EST)</option>
+                        <option value="America/Los_Angeles|Los Angeles|USA">Los Angeles (USA - PST)</option>
+                        <option value="Europe/London|London|UK">London (UK - GMT/BST)</option>
+                        <option value="Europe/Paris|Paris|France">Paris (France - CET)</option>
+                        <option value="Europe/Berlin|Berlin|Germany">Berlin (Germany - CET)</option>
+                        <option value="Asia/Dubai|Dubai|UAE">Dubai (UAE - GST)</option>
+                        <option value="Asia/Kolkata|New Delhi|India">New Delhi (India - IST)</option>
+                        <option value="Asia/Singapore|Singapore|Singapore">Singapore (SGT)</option>
+                        <option value="Asia/Tokyo|Tokyo|Japan">Tokyo (Japan - JST)</option>
+                        <option value="Australia/Sydney|Sydney|Australia">Sydney (Australia - AEST)</option>
+                        <option value="Pacific/Auckland|Auckland|New Zealand">Auckland (NZ - NZST)</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-ghost" id="cancel-city-btn">Cancel</button>
+                    <button type="button" class="btn-primary" id="confirm-add-city-btn">Add Clock</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVE ALARM TRIGGER OVERLAY (Full Screen Ringing) -->
+    <div class="alarm-trigger-overlay hidden" id="alarm-trigger-screen">
+        <div class="alarm-ring-waves">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+        </div>
+
+        <div class="alarm-ring-card">
+            <div class="ringing-bell-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+                </svg>
+            </div>
+
+            <div class="alarm-ring-time" id="ring-time-display">07:00 AM</div>
+            <h2 class="alarm-ring-label" id="ring-label-display">Morning Wake Up Routine</h2>
+            <p class="alarm-ring-sub">Alarm is sounding!</p>
+
+            <div class="snooze-options">
+                <button class="btn-snooze" data-minutes="5">+5 Min Snooze</button>
+                <button class="btn-snooze" data-minutes="10">+10 Min Snooze</button>
+                <button class="btn-snooze" data-minutes="15">+15 Min Snooze</button>
+            </div>
+
+            <button class="btn-dismiss" id="dismiss-alarm-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                <span>DISMISS ALARM</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="audio.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
