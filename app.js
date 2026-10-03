@@ -207,6 +207,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    let ringVibrateInterval = null;
+
+    function startMobileVibration() {
+        if ('vibrate' in navigator) {
+            try {
+                navigator.vibrate([400, 200, 400, 200, 800]);
+                if (ringVibrateInterval) clearInterval(ringVibrateInterval);
+                ringVibrateInterval = setInterval(() => {
+                    if (activeRingingAlarm && 'vibrate' in navigator) {
+                        navigator.vibrate([400, 200, 400, 200, 800]);
+                    }
+                }, 2500);
+            } catch (e) {
+                console.warn('Vibration API:', e);
+            }
+        }
+    }
+
+    function stopMobileVibration() {
+        if (ringVibrateInterval) {
+            clearInterval(ringVibrateInterval);
+            ringVibrateInterval = null;
+        }
+        if ('vibrate' in navigator) {
+            try {
+                navigator.vibrate(0);
+            } catch (e) {}
+        }
+    }
+
     function triggerAlarm(alarm) {
         activeRingingAlarm = alarm;
         
@@ -218,6 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Play Synthesized Audio
         window.soundEngine.setVolume(alarm.volume || 0.8);
         window.soundEngine.startAlarm(alarm.sound || 'digital');
+
+        // Mobile Vibration
+        startMobileVibration();
 
         // Send System Notification if permitted
         if ('Notification' in window && Notification.permission === 'granted') {
@@ -234,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function dismissCurrentAlarm() {
         window.soundEngine.stopAlarm();
+        stopMobileVibration();
         alarmTriggerScreen.classList.add('hidden');
 
         // If alarm was set for "Once Only" (days length 0), auto disable it
@@ -249,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function snoozeCurrentAlarm(minutes) {
         window.soundEngine.stopAlarm();
+        stopMobileVibration();
         alarmTriggerScreen.classList.add('hidden');
 
         if (!activeRingingAlarm) return;
@@ -1019,6 +1054,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ==========================================
+    // 9. PWA & MOBILE APP INTEGRATION
+    // ==========================================
+    const pwaInstallBtn = document.getElementById('pwa-install-btn');
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent default mini-infobar on mobile Chrome
+        e.preventDefault();
+        deferredPrompt = e;
+        if (pwaInstallBtn) {
+            pwaInstallBtn.classList.remove('hidden');
+        }
+    });
+
+    if (pwaInstallBtn) {
+        pwaInstallBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    pwaInstallBtn.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        });
+    }
+
+    window.addEventListener('appinstalled', () => {
+        if (pwaInstallBtn) pwaInstallBtn.classList.add('hidden');
+        deferredPrompt = null;
+    });
+
+    // Register Service Worker for offline PWA functionality
+    if ('serviceWorker' in navigator && (window.location.protocol.startsWith('http') || window.location.protocol === 'file:')) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => {
+                    console.log('Aura Service Worker registered:', reg.scope);
+                })
+                .catch(err => {
+                    console.log('Service Worker notice:', err);
+                });
+        });
+    }
+
+    // Request Notification permission smoothly on first interaction
+    document.addEventListener('click', () => {
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().catch(() => {});
+        }
+    }, { once: true });
+
     // Initial render of alarms
     renderAlarms();
 });
+

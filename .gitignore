@@ -1,0 +1,10 @@
+node_modules/
+.gradle/
+build/
+android/app/build/
+android/.gradle/
+android/build/
+*.log
+.DS_Store
+Thumbs.db
+www/

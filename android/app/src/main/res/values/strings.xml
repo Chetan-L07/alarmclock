@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Aura Alarm</string>
+    <string name="title_activity_main">Aura Alarm</string>
+    <string name="package_name">com.aura.alarmclock</string>
+    <string name="custom_url_scheme">com.aura.alarmclock</string>
+</resources>

@@ -58,11 +58,15 @@ body {
     color: var(--text-primary);
     font-family: var(--font-ui);
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
     overflow-x: hidden;
     position: relative;
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 /* Ambient Background Lights */
@@ -129,7 +133,7 @@ body {
     z-index: 1;
     width: 100%;
     max-width: 1120px;
-    padding: 24px 20px 60px;
+    padding: max(24px, calc(16px + env(safe-area-inset-top))) max(20px, calc(16px + env(safe-area-inset-right))) max(60px, calc(30px + env(safe-area-inset-bottom))) max(20px, calc(16px + env(safe-area-inset-left)));
     display: flex;
     flex-direction: column;
     gap: 24px;

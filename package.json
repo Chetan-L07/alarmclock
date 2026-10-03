@@ -1,0 +1,41 @@
+{
+  "name": "aura-alarm-app",
+  "version": "1.0.0",
+  "description": "AURA Smart Alarm & Precision Time Suite - Mobile & Web App",
+  "main": "app.js",
+  "scripts": {
+    "generate:icons": "node generate-icons.js && node generate-android-icons.js",
+    "build": "node build.js",
+    "sync": "node build.js && npx cap sync android",
+    "open:android": "npx cap open android",
+    "build:apk": "node build.js && npx cap sync android && cd android && gradlew assembleDebug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chetan-L07/alarmclock.git"
+  },
+  "keywords": [
+    "alarm",
+    "clock",
+    "stopwatch",
+    "timer",
+    "world-clock",
+    "capacitor",
+    "android",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/status-bar": "^8.0.3"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5"
+  }
+}

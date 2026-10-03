@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <linearGradient id="neon-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+    <linearGradient id="accent-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="bell-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a5b4fc" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <filter id="glow-blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Squircle / Rounded Rect -->
+  <rect width="512" height="512" rx="128" fill="url(#bg-grad)" />
+  <rect width="508" height="508" x="2" y="2" rx="126" fill="none" stroke="url(#neon-glow)" stroke-width="4" stroke-opacity="0.4" />
+
+  <!-- Alarm Clock Bells / Ears -->
+  <path d="M120 140 L70 90 A28 28 0 0 1 110 50 L160 100 Z" fill="url(#bell-grad)" opacity="0.9" />
+  <path d="M392 140 L442 90 A28 28 0 0 0 402 50 L352 100 Z" fill="url(#bell-grad)" opacity="0.9" />
+
+  <!-- Top Push Button / Hammer -->
+  <rect x="236" y="55" width="40" height="35" rx="10" fill="url(#bell-grad)" />
+
+  <!-- Bottom Legs -->
+  <path d="M130 420 L95 465 A16 16 0 0 0 120 485 L165 440 Z" fill="#4f46e5" />
+  <path d="M382 420 L417 465 A16 16 0 0 1 392 485 L347 440 Z" fill="#4f46e5" />
+
+  <!-- Outer Glowing Ring -->
+  <circle cx="256" cy="275" r="165" fill="#0b0f19" stroke="url(#neon-glow)" stroke-width="14" filter="url(#glow-blur)" />
+  
+  <!-- Dial Inner Face -->
+  <circle cx="256" cy="275" r="145" fill="#070a13" stroke="url(#accent-cyan)" stroke-width="2" stroke-opacity="0.3" />
+
+  <!-- Hour Ticks -->
+  <line x1="256" y1="145" x2="256" y2="162" stroke="#6366f1" stroke-width="6" stroke-linecap="round" />
+  <line x1="256" y1="388" x2="256" y2="405" stroke="#6366f1" stroke-width="6" stroke-linecap="round" />
+  <line x1="126" y1="275" x2="143" y2="275" stroke="#6366f1" stroke-width="6" stroke-linecap="round" />
+  <line x1="369" y1="275" x2="386" y2="275" stroke="#6366f1" stroke-width="6" stroke-linecap="round" />
+
+  <!-- Clock Hands -->
+  <!-- Hour Hand -->
+  <line x1="256" y1="275" x2="200" y2="210" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" />
+  <!-- Minute Hand -->
+  <line x1="256" y1="275" x2="325" y2="185" stroke="url(#accent-cyan)" stroke-width="8" stroke-linecap="round" />
+  <!-- Second Hand -->
+  <line x1="256" y1="295" x2="256" y2="165" stroke="#ec4899" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Center Pin Glow -->
+  <circle cx="256" cy="275" r="12" fill="#38bdf8" />
+  <circle cx="256" cy="275" r="6" fill="#ffffff" />
+</svg>

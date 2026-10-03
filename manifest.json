@@ -1,0 +1,55 @@
+{
+  "name": "AURA Alarm - Precision Time Suite",
+  "short_name": "Aura Alarm",
+  "description": "A high-precision Alarm, World Clock, Stopwatch and Timer mobile application with synthesized audio tones.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090d16",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["utilities", "productivity", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "New Alarm",
+      "short_name": "Alarm",
+      "description": "Set a new alarm quickly",
+      "url": "./index.html#alarms",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Stopwatch",
+      "short_name": "Stopwatch",
+      "description": "Open high-precision stopwatch",
+      "url": "./index.html#stopwatch",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Timer",
+      "short_name": "Timer",
+      "description": "Start countdown timer",
+      "url": "./index.html#timer",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
